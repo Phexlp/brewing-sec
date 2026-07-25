@@ -43,6 +43,13 @@ class LabItem(BaseModel):
     description: str
     completed: bool = False
 
+class RoadmapPhase(BaseModel):
+    phase_id: str
+    title: str
+    description: str
+    est_hours: float
+    labs: List[LabItem]
+
 class DomainScore(BaseModel):
     domain_id: str
     domain_name: str
@@ -56,7 +63,7 @@ class LearningPathResponse(BaseModel):
     target_role_name: str
     parsed_cv: ParsedCV
     domain_scores: List[DomainScore]
-    labs: List[LabItem]
+    roadmap: List[RoadmapPhase]
     tier_counts: Dict[str, int]
     total_est_hours: float
     primary_est_hours: float

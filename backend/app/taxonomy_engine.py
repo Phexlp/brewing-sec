@@ -220,6 +220,41 @@ def generate_learning_path(
         if lab.tier in ("Primary Path", "Foundation"):
             primary_est_hours += lab.est_hours
 
+    # ─── BUILD ROADMAP PHASES ───
+    # Group the curated labs by their Tier into distinct phases
+    foundation_labs = [l for l in curated_labs if l.tier == "Foundation"]
+    primary_labs = [l for l in curated_labs if l.tier == "Primary Path"]
+    stretch_labs = [l for l in curated_labs if l.tier == "Stretch"]
+    
+    roadmap = []
+    
+    if foundation_labs:
+        roadmap.append({
+            "phase_id": "phase_1",
+            "title": "Phase 1: Foundation Building",
+            "description": "Establishing core concepts and bridging major knowledge gaps before tackling advanced topics.",
+            "est_hours": sum(l.est_hours for l in foundation_labs),
+            "labs": foundation_labs
+        })
+        
+    if primary_labs:
+        roadmap.append({
+            "phase_id": "phase_2",
+            "title": "Phase 2: Core Competencies",
+            "description": "Developing the essential, intermediate skills required for your target role.",
+            "est_hours": sum(l.est_hours for l in primary_labs),
+            "labs": primary_labs
+        })
+        
+    if stretch_labs:
+        roadmap.append({
+            "phase_id": "phase_3",
+            "title": "Phase 3: Advanced Specialization",
+            "description": "Taking your skills beyond the benchmark with advanced challenges and edge-case scenarios.",
+            "est_hours": sum(l.est_hours for l in stretch_labs),
+            "labs": stretch_labs
+        })
+
     elapsed_ms = round((time.time() - start_time) * 1000, 2)
 
     return LearningPathResponse(
@@ -228,7 +263,7 @@ def generate_learning_path(
         target_role_name=target_role["name"],
         parsed_cv=parsed_cv,
         domain_scores=domain_scores,
-        labs=curated_labs,
+        roadmap=roadmap,
         tier_counts=tier_counts,
         total_est_hours=round(total_est_hours, 1),
         primary_est_hours=round(primary_est_hours, 1),

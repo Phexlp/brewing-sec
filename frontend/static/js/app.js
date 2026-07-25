@@ -592,12 +592,18 @@ function App() {
   };
 
   // ── Filtered labs
-  const filteredLabs = pathData?.labs.filter(l => {
-    if (activeTab === 'All') return true;
-    return l.tier === activeTab;
-  }) || [];
+  const filteredRoadmap = pathData?.roadmap?.map(phase => {
+    return {
+      ...phase,
+      labs: phase.labs.filter(l => {
+        if (activeTab === 'All') return true;
+        return l.tier === activeTab;
+      })
+    };
+  }).filter(phase => phase.labs.length > 0) || [];
 
   const tierCounts = pathData?.tier_counts || {};
+  const totalLabsCount = pathData?.roadmap?.reduce((acc, phase) => acc + phase.labs.length, 0) || 0;
 
   // ── Has real CV data?
   const hasData = pathData && pathData.parsed_cv?.raw_text_length > 0;
@@ -776,11 +782,11 @@ function App() {
                     <div className="stat-label">Yrs Exp</div>
                   </div>
                   <div className="stat-cell">
-                    <div className="stat-number">{pathData.primary_est_hours}</div>
+                    <div className="stat-number">{pathData.total_est_hours}</div>
                     <div className="stat-label">Path Hrs</div>
                   </div>
                   <div className="stat-cell">
-                    <div className="stat-number">{pathData.labs.length}</div>
+                    <div className="stat-number">{totalLabsCount}</div>
                     <div className="stat-label">Total Labs</div>
                   </div>
                 </div>
@@ -818,7 +824,7 @@ function App() {
               {/* Tier filter pills */}
               <div className="tier-filter-bar">
                 {['All', 'Foundation', 'Primary Path', 'Stretch', 'Skip'].map(tier => {
-                  const count = tier === 'All' ? pathData.labs.length : (tierCounts[tier] || 0);
+                  const count = tier === 'All' ? totalLabsCount : (tierCounts[tier] || 0);
                   const activeClass =
                     activeTab === tier
                       ? tier === 'All'          ? 'active-all'
@@ -839,21 +845,35 @@ function App() {
                 })}
               </div>
 
-              {/* Timeline */}
-              <div className="lab-timeline">
-                {filteredLabs.length === 0 && (
+              {/* Roadmap Timeline */}
+              <div className="roadmap-container">
+                {filteredRoadmap.length === 0 && (
                   <div style={{ color:'var(--text-muted)', fontSize:'0.85rem', padding:'1rem 0' }}>
                     No labs in this tier.
                   </div>
                 )}
-                {filteredLabs.map((lab, idx) => (
-                  <LabItem
-                    key={lab.lab_id}
-                    lab={lab}
-                    isDone={!!completedLabs[lab.lab_id]}
-                    onToggle={toggleLab}
-                    index={idx}
-                  />
+                {filteredRoadmap.map((phase, pIdx) => (
+                  <div key={phase.phase_id} className="roadmap-phase">
+                    <div className="phase-header">
+                      <div className="phase-number">0{pIdx + 1}</div>
+                      <div className="phase-info">
+                        <div className="phase-title">{phase.title}</div>
+                        <div className="phase-desc">{phase.description}</div>
+                      </div>
+                      <div className="phase-hours">{phase.est_hours}h</div>
+                    </div>
+                    <div className="lab-timeline">
+                      {phase.labs.map((lab, idx) => (
+                        <LabItem
+                          key={lab.lab_id}
+                          lab={lab}
+                          isDone={!!completedLabs[lab.lab_id]}
+                          onToggle={toggleLab}
+                          index={idx}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>

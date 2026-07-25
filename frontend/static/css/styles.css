@@ -1090,6 +1090,69 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border-dim); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--border-subtle); }
 
+/* ─── ROADMAP PHASES ─────────────────────────────────────────────────── */
+.roadmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.roadmap-phase {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--border-subtle);
+}
+
+.phase-number {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+  line-height: 1;
+  margin-top: -0.5rem;
+}
+
+.phase-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.phase-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.phase-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.phase-hours {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent-purple);
+  padding: 0.35rem 0.6rem;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 4px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
 /* ─── PDF PREVIEW ──────────────────────────────────────────────────────── */
 .pdf-preview-scroll {
   flex: 1;
